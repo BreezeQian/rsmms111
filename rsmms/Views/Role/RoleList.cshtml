@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "角色管理";
+}
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <table id="tbList">
+        <tr>
+            <th>角色名称</th>
+            <th>角色描述</th>
+            <th>操作</th>
+        </tr>
+        <!--遍历 Action方法 设置给 ViewData 的集合数据，生成HTML代码-->
+        @foreach (var e in ViewBag.Data)
+        {
+            <tr>
+                <td>@e.Rname</td>
+                <td>@e.Rdesc</td>
+                <td>
+                    <a href="javascript:void(0)">编辑</a>&nbsp;&nbsp;
+                    <a href="javascript:void(0)">删除</a>
+                </td>
+
+            </tr>
+        }
+    </table>
+</div>

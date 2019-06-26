@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "菜单管理";
+}
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <table id="tbList">
+        <tr>
+            <th>菜单名称</th>
+            <th>父级菜单</th>
+            <th>路径</th>
+            <th>菜单级别</th>
+            <th>备注</th>
+            <th>操作</th>
+        </tr>
+        <!--遍历 Action方法 设置给 ViewData 的集合数据，生成HTML代码-->
+        @foreach (var e in ViewBag.Data)
+        {
+        <tr>
+            <td>@e.Mname</td>
+
+            @if (@e.Parent_menu.Mname == "" || @e.Parent_menu.Mname == null)
+            {
+                <td>
+                   无
+                </td>
+            }
+            else
+            {
+                <td>
+                    @e.Parent_menu.Mname
+                </td>
+            }
+                <td>@e.Href</td>
+                <td>@e.Level</td>
+                <td>@e.Remark</td>
+                <td>
+                    <a href="javascript:void(0)">编辑</a>&nbsp;&nbsp;
+                    <a href="javascript:void(0)">删除</a>
+                </td>
+
+            </tr>
+        }
+    </table>
+</div>

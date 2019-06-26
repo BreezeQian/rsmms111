@@ -1,0 +1,227 @@
+﻿@{
+    ViewBag.Title = "员工管理";
+}
+<h2>@ViewBag.Title</h2>
+
+<script>
+
+    $(function () {
+        $.ajax({
+            url: "/Emp/getEmpList",
+            type: "post",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (result) { 
+                var html = "";
+                for (var i = 0; i < result.length; i++) {
+                    html += "<tr><td>" + result[i].Eid + "</td><td>" + result[i].Ename + "</td><td>" + result[i].Age +
+                        "</td><td>" + result[i].Dep.Dname + "</td>";
+                    if (result[i].Role.Rname != "" && result[i].Role.Rname != null) {
+                        html += "<td>" + result[i].Role.Rname + "</td>";
+                    } else {
+                        html += "<td>无</td>";
+                    }
+                    html += "<td><input type='button' onclick='updateEmpById(\"" + result[i].Eid + "\")' value='编辑' />&nbsp;&nbsp;<input type='button' onclick='deleteEmpById(\"" + result[i].Eid + "\")' value='删除' /></td>";
+                    html += "</tr>";
+                }
+                $("#mytbList").empty();
+                $("#mytbList").append(html);
+
+            },
+            error: function () {
+                alert('系统错误:请联系管理员！');
+            }
+        });
+
+        /**
+         * 加载角色下拉框
+         */
+        $.ajax({
+            url: "/Emp/getRoles",
+            type: "post",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (result) {
+                var ridSelect = "<option value=''>------请选择------</option>";
+                for (var i = 0; i < result.length; i++) {
+                    ridSelect += "<option value='" + result[i].Rid + "'>" + result[i].Rname + "</option>";
+                }
+                $("#rid").append(ridSelect);
+            },
+            error: function () {
+                alert('系统错误:请联系管理员！');
+            }
+        });
+
+        /**
+         * 加载部门下拉框
+         */
+        $.ajax({
+            url: "/Emp/getDeps",
+            type: "post",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (result) {
+                var didSelect = "<option value=''>------请选择------</option>";
+                for (var i = 0; i < result.length; i++) {
+                    didSelect += "<option value='" + result[i].Did + "'>" + result[i].Dname + "</option>";
+                }
+                $("#did").append(didSelect);
+            },
+            error: function () {
+                alert('系统错误:请联系管理员！');
+            }
+        });
+
+
+        /**
+         * 重置查询条件
+         */
+        $("#reset").click(function () {
+            $("#eid").val("");
+            $("#ename").val("");
+            $('#rid option:first').prop('selected', 'selected');
+            $('#did option:first').prop('selected', 'selected');
+        });
+
+        $("#query").click(function () {
+            //debugger;
+            var eid = $("#eid").val();
+            var ename = $("#ename").val();
+            var did = $("#did option:selected").val();
+            var rid = $("#rid option:selected").val();
+            
+            $.ajax({
+                url: "/Emp/getEmpList?eid=" + eid + "&ename=" + ename + "&did=" + did + "&rid=" + rid,
+                type: "post",
+               
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                success: function (result) {
+                    var html = "";
+                    for (var i = 0; i < result.length; i++) {
+                        html += "<tr><td>" + result[i].Eid + "</td><td>" + result[i].Ename + "</td><td>" + result[i].Age +
+                            "</td><td>" + result[i].Dep.Dname + "</td>";
+                        if (result[i].Role.Rname != "" && result[i].Role.Rname != null) {
+                            html += "<td>" + result[i].Role.Rname + "</td>";
+                        } else {
+                            html += "<td>无</td>";
+                        }
+                        html += "<td><input type='button' onclick='updateEmpById(\"" + result[i].Eid + "\")' value='编辑' />&nbsp;&nbsp;<input type='button' onclick='deleteEmpById(\"" + result[i].Eid + "\")' value='删除' /></td>";
+                        html += "</tr>";
+                    }
+                    $("#mytbList").empty();
+                    $("#mytbList").append(html);
+
+                },
+                error: function () {
+                    alert('系统错误:请联系管理员！');
+                }
+            });
+        });
+
+        layui.use(['layer', 'form', 'table'], function () {
+            var layer = layui.layer,
+                $ = layui.jquery,
+                form = layui.form,
+                table = layui.table,
+                t; 
+        });
+
+        
+
+    });
+
+    function updateEmpById(eid) {
+        layer.open({
+            type: 2 //此处以iframe举例
+            , title: '编辑员工（' + eid + ')'
+            , area: ['600px', '400px']
+            , shade: 0
+            , maxmin: true
+            , content: '/Dep/DepList'
+            , btn: ['继续弹出', '全部关闭'] //只是为了演示
+            , yes: function () {
+                $(that).click();
+            }
+            , btn2: function () {
+                layer.closeAll();
+            }
+
+            , zIndex: layer.zIndex //重点1
+            , success: function (layero) {
+                layer.setTop(layero); //重点2
+            }
+        });
+        
+    }
+
+    function deleteEmpById(eid) {
+        layer.msg(eid);
+    }
+   
+   
+
+    
+</script>
+<form id="queryEmpFrom">
+    <div>
+        
+        员工账号：<input type="text" id="eid" name="eid" />&nbsp;&nbsp;
+        员工姓名：<input type="text" id="ename" name="ename" />&nbsp;&nbsp;
+        员工职位：<select id="rid" name="rid" style="width:170px;"></select>&nbsp;&nbsp;
+        所属部门：<select id="did" name="did" style="width:170px;"></select><br />
+        <div style="float:right;">
+            <input type="button" value="查询" class="btn-primary" id="query"/>&nbsp;&nbsp;
+            <input type="button" value="重置" class="btn-default" id="reset" />
+        </div>
+
+
+    </div>
+
+    <div>
+        <table id="tbList">
+            <thead>
+                <tr>
+                    <th>员工账号</th>
+                    <th>员工姓名</th>
+                    <th>年龄</th>
+                    <th>部门</th>
+                    <th>职位</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="mytbList">
+
+
+            </tbody>
+            <!--遍历 Action方法 设置给 ViewData 的集合数据，生成HTML代码-->
+            @*@foreach (var e in ViewBag.Data)
+            {
+                <tr>
+                    <td>@e.Eid</td>
+                    <td>@e.Ename</td>
+                    <td>@e.Age</td>
+                    <td>@e.Dep.Dname</td>
+                    @if (@e.Role.Rname != "" && @e.Role.Rname != null)
+                    {
+                        <td>@e.Role.Rname</td>
+                    }
+                    else
+                    {
+                        <td>无</td>
+                    }
+                    <td>
+                        <a href="javascript:void(0)">编辑</a>&nbsp;&nbsp;
+                        <a href="javascript:void(0)">删除</a>
+                    </td>
+
+                </tr>
+            }*@
+        </table>
+    </div>
+</form>
