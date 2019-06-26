@@ -3,21 +3,21 @@
 }
 <h2>@ViewBag.Title</h2>
 
-<div>
-    <table id="tbList">
-        <tr>
-            <th>角色名称</th>
-            <th>角色描述</th>
-            <th>操作</th>
+<div style="position: fixed;top:150px; left: auto; right: auto;  bottom: auto; ">
+    <table id="tbList" border="2" width="600px" height="180px" cellspacing="0">
+        <tr style="font-size:25px" align="center">
+            <td>角色名称</td>
+            <td>角色描述</td>
+            <td>操作</td>
         </tr>
         <!--遍历 Action方法 设置给 ViewData 的集合数据，生成HTML代码-->
         @foreach (var e in ViewBag.Data)
         {
-            <tr>
+            <tr style="font-size:17px" align="center">
                 <td>@e.Rname</td>
                 <td>@e.Rdesc</td>
                 <td>
-                    <a href="javascript:void(0)">编辑</a>&nbsp;&nbsp;
+                    <a href="javascript:void(0)">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="javascript:void(0)">删除</a>
                 </td>
 

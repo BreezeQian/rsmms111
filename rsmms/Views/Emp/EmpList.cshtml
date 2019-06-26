@@ -170,35 +170,35 @@
 </script>
 <form id="queryEmpFrom">
     <div>
-        
-        员工账号：<input type="text" id="eid" name="eid" />&nbsp;&nbsp;
-        员工姓名：<input type="text" id="ename" name="ename" />&nbsp;&nbsp;
-        员工职位：<select id="rid" name="rid" style="width:170px;"></select>&nbsp;&nbsp;
-        所属部门：<select id="did" name="did" style="width:170px;"></select><br />
+
+       <font size="4">员工账号：</font><input type="text" id="eid" name="eid" />&nbsp;&nbsp;
+       <font size="4">员工姓名：</font><input type="text" id="ename" name="ename" />&nbsp;&nbsp;
+       <font size="4">员工职位：</font><select id="rid" name="rid" style="width:170px;"></select>&nbsp;&nbsp;
+       <font size="4">所属部门：</font><select id="did" name="did" style="width:170px;"></select><br />
         <div style="float:right;">
-            <input type="button" value="查询" class="btn-primary" id="query"/>&nbsp;&nbsp;
+            <input type="button" value="查询" class="btn-primary" id="query" />&nbsp;&nbsp;
             <input type="button" value="重置" class="btn-default" id="reset" />
         </div>
 
 
     </div>
 
-    <div>
-        <table id="tbList">
+    <div style="position: fixed;top:180px; left: auto; right: auto;  bottom: auto; ">
+        <table id="tbList" border="2" width="800px" height="180px" cellspacing="0">
             <thead>
-                <tr>
-                    <th>员工账号</th>
-                    <th>员工姓名</th>
-                    <th>年龄</th>
-                    <th>部门</th>
-                    <th>职位</th>
-                    <th>操作</th>
+                <tr style="font-size:25px" align="center">
+                    <td>员工账号</td>
+                    <td>员工姓名</td>
+                    <td>年龄</td>
+                    <td>部门</td>
+                    <td>职位</td>
+                    <td>操作</td>
                 </tr>
             </thead>
-            <tbody id="mytbList">
+            <tbody id="mytbList" style="font-size:17px" align="center">
 
 
-            </tbody>
+       </tbody>
             <!--遍历 Action方法 设置给 ViewData 的集合数据，生成HTML代码-->
             @*@foreach (var e in ViewBag.Data)
             {
