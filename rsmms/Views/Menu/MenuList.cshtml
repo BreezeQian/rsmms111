@@ -3,39 +3,39 @@
 }
 <h2>@ViewBag.Title</h2>
 
-<div>
-    <table id="tbList">
-        <tr>
-            <th>菜单名称</th>
-            <th>父级菜单</th>
-            <th>路径</th>
-            <th>菜单级别</th>
-            <th>备注</th>
-            <th>操作</th>
+<div style="position: fixed;top:150px; left: auto; right: auto;  bottom: auto; ">
+    <table id="tbList" border="2" width="800px" height="180px" cellspacing="0">
+        <tr style="font-size:25px" align="center">
+            <td>菜单名称</td>
+            <td>父级菜单</td>
+            <td>路径</td>
+            <td>菜单级别</td>
+            <td>备注</td>
+            <td>操作</td>
         </tr>
         <!--遍历 Action方法 设置给 ViewData 的集合数据，生成HTML代码-->
         @foreach (var e in ViewBag.Data)
         {
-        <tr>
-            <td>@e.Mname</td>
+            <tr style="font-size:17px" align="center">
+                <td>@e.Mname</td>
 
-            @if (@e.Parent_menu.Mname == "" || @e.Parent_menu.Mname == null)
-            {
-                <td>
-                   无
-                </td>
-            }
-            else
-            {
-                <td>
-                    @e.Parent_menu.Mname
-                </td>
-            }
+                @if (@e.Parent_menu.Mname == "" || @e.Parent_menu.Mname == null)
+                {
+                    <td>
+                        无
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        @e.Parent_menu.Mname
+                    </td>
+                }
                 <td>@e.Href</td>
                 <td>@e.Level</td>
                 <td>@e.Remark</td>
                 <td>
-                    <a href="javascript:void(0)">编辑</a>&nbsp;&nbsp;
+                    <a href="javascript:void(0)">编辑</a>&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="javascript:void(0)">删除</a>
                 </td>
 

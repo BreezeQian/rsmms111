@@ -89,7 +89,39 @@
 
         $("#query").click(function () {
             //debugger;
-            queryEmpByCondition();
+            var eid = $("#eid").val();
+            var ename = $("#ename").val();
+            var did = $("#did option:selected").val();
+            var rid = $("#rid option:selected").val();
+            
+            $.ajax({
+                url: "/Emp/getEmpList?eid=" + eid + "&ename=" + ename + "&did=" + did + "&rid=" + rid,
+                type: "post",
+               
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                success: function (result) {
+                    var html = "";
+                    for (var i = 0; i < result.length; i++) {
+                        html += "<tr><td>" + result[i].Eid + "</td><td>" + result[i].Ename + "</td><td>" + result[i].Age +
+                            "</td><td>" + result[i].Dep.Dname + "</td>";
+                        if (result[i].Role.Rname != "" && result[i].Role.Rname != null) {
+                            html += "<td>" + result[i].Role.Rname + "</td>";
+                        } else {
+                            html += "<td>无</td>";
+                        }
+                        html += "<td><input type='button' onclick='updateEmpById(\"" + result[i].Eid + "\")' value='编辑' />&nbsp;&nbsp;<input type='button' onclick='deleteEmpById(\"" + result[i].Eid + "\")' value='删除' /></td>";
+                        html += "</tr>";
+                    }
+                    $("#mytbList").empty();
+                    $("#mytbList").append(html);
+
+                },
+                error: function () {
+                    alert('系统错误:请联系管理员！');
+                }
+            });
         });
 
         layui.use(['layer', 'form', 'table'], function () {
@@ -100,57 +132,7 @@
                 t; 
         });
 
-
-        $("#add").click(function () {
-            layer.open({
-                type: 2 //此处以iframe举例
-                , title: '新增员工'
-                , area: ['60%', '80%']
-                , shade: 0
-                , maxmin: true
-                , content: '/Emp/EmpAdd'
-                , btn: ['保存', '关闭'] //只是为了演示
-                , yes: function (index, layero) {
-                    //获得新增页面的数据
-                    var eid = layer.getChildFrame('body', index).find("#eid").val();
-                    var password = layer.getChildFrame('body', index).find("#password").val();
-                    var ename = layer.getChildFrame('body', index).find("#ename").val();
-                    var age = layer.getChildFrame('body', index).find("#age").val();
-                    var did = layer.getChildFrame('body', index).find("#did").val();
-                    var rid = layer.getChildFrame('body', index).find("#rid").val();
-                    if (eid != null && eid.length > 0) {
-                        $.ajax({
-                            url: '/Emp/doEmpAdd?eid=' + eid + '&password=' + password + '&ename=' + ename + '&age=' + age + '&did=' + did + '&rid=' + rid,
-                            dataType: 'json',
-                            type: 'post',
-                            async: false,
-                            success: function (result) {
-                                layer.closeAll();
-                                queryEmpByCondition();
-                                layer.msg(result, {
-                                      time: 1500, 
-                                });
-                                
-                            },
-                            error: function () {
-                                alert('系统提示：发生不知明错误，请联系管理员');
-                            }
-                        });
-                    } else {
-                        alert('系统提示：请输入员工用户名和密码');
-                    }
-                    
-                }
-                , btn2: function () {
-                    layer.closeAll();
-                }
-
-                , zIndex: layer.zIndex //重点1
-                , success: function (layero) {
-                    layer.setTop(layero); //重点2
-                }
-            });
-        });
+        
 
     });
 
@@ -158,13 +140,13 @@
         layer.open({
             type: 2 //此处以iframe举例
             , title: '编辑员工（' + eid + ')'
-            , area: ['60%', '80%']
+            , area: ['600px', '400px']
             , shade: 0
             , maxmin: true
-            , content: '/Emp/EmpEdit?eid=' + eid
-            , btn: ['保存', '关闭'] //只是为了演示
-            , yes: function (index, layero) {
-                
+            , content: '/Dep/DepList'
+            , btn: ['继续弹出', '全部关闭'] //只是为了演示
+            , yes: function () {
+                $(that).click();
             }
             , btn2: function () {
                 layer.closeAll();
@@ -181,42 +163,6 @@
     function deleteEmpById(eid) {
         layer.msg(eid);
     }
-
-    function queryEmpByCondition() {
-        var eid = $("#eid").val();
-        var ename = $("#ename").val();
-        var did = $("#did option:selected").val();
-        var rid = $("#rid option:selected").val();
-
-        $.ajax({
-            url: "/Emp/getEmpList?eid=" + eid + "&ename=" + ename + "&did=" + did + "&rid=" + rid,
-            type: "post",
-
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            async: false,
-            success: function (result) {
-                var html = "";
-                for (var i = 0; i < result.length; i++) {
-                    html += "<tr><td>" + result[i].Eid + "</td><td>" + result[i].Ename + "</td><td>" + result[i].Age +
-                        "</td><td>" + result[i].Dep.Dname + "</td>";
-                    if (result[i].Role.Rname != "" && result[i].Role.Rname != null) {
-                        html += "<td>" + result[i].Role.Rname + "</td>";
-                    } else {
-                        html += "<td>无</td>";
-                    }
-                    html += "<td><input type='button' onclick='updateEmpById(\"" + result[i].Eid + "\")' value='编辑' />&nbsp;&nbsp;<input type='button' onclick='deleteEmpById(\"" + result[i].Eid + "\")' value='删除' /></td>";
-                    html += "</tr>";
-                }
-                $("#mytbList").empty();
-                $("#mytbList").append(html);
-
-            },
-            error: function () {
-                alert('系统错误:请联系管理员！');
-            }
-        });
-    }
    
    
 
@@ -224,36 +170,35 @@
 </script>
 <form id="queryEmpFrom">
     <div>
-        
-        员工账号：<input type="text" id="eid" name="eid" />&nbsp;&nbsp;
-        员工姓名：<input type="text" id="ename" name="ename" />&nbsp;&nbsp;
-        员工职位：<select id="rid" name="rid" style="width:170px;"></select>&nbsp;&nbsp;
-        所属部门：<select id="did" name="did" style="width:170px;"></select><br />
+
+       <font size="4">员工账号：</font><input type="text" id="eid" name="eid" />&nbsp;&nbsp;
+       <font size="4">员工姓名：</font><input type="text" id="ename" name="ename" />&nbsp;&nbsp;
+       <font size="4">员工职位：</font><select id="rid" name="rid" style="width:170px;"></select>&nbsp;&nbsp;
+       <font size="4">所属部门：</font><select id="did" name="did" style="width:170px;"></select><br />
         <div style="float:right;">
-            <input type="button" value="新增" class="btn-danger" id="add"/>&nbsp;&nbsp;
-            <input type="button" value="查询" class="btn-primary" id="query"/>&nbsp;&nbsp;
+            <input type="button" value="查询" class="btn-primary" id="query" />&nbsp;&nbsp;
             <input type="button" value="重置" class="btn-default" id="reset" />
         </div>
 
 
     </div>
 
-    <div>
-        <table id="tbList">
+    <div style="position: fixed;top:180px; left: auto; right: auto;  bottom: auto; ">
+        <table id="tbList" border="2" width="800px" height="180px" cellspacing="0">
             <thead>
-                <tr>
-                    <th>员工账号</th>
-                    <th>员工姓名</th>
-                    <th>年龄</th>
-                    <th>部门</th>
-                    <th>职位</th>
-                    <th>操作</th>
+                <tr style="font-size:25px" align="center">
+                    <td>员工账号</td>
+                    <td>员工姓名</td>
+                    <td>年龄</td>
+                    <td>部门</td>
+                    <td>职位</td>
+                    <td>操作</td>
                 </tr>
             </thead>
-            <tbody id="mytbList">
+            <tbody id="mytbList" style="font-size:17px" align="center">
 
 
-            </tbody>
+       </tbody>
             <!--遍历 Action方法 设置给 ViewData 的集合数据，生成HTML代码-->
             @*@foreach (var e in ViewBag.Data)
             {
