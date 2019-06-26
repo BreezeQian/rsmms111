@@ -1,0 +1,100 @@
+﻿<link rel="stylesheet" href="~/Scripts/layui/css/layui.css"/>
+<script type="text/javascript" src="~/Scripts/layui/layui.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+<script>
+    $(function () {
+        /**
+         * 加载角色下拉框
+         */
+        $.ajax({
+            url: "/Emp/getRoles",
+            type: "post",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (result) {
+                var ridSelect = "<option value=''>------请选择------</option>";
+                for (var i = 0; i < result.length; i++) {
+                    ridSelect += "<option value='" + result[i].Rid + "'>" + result[i].Rname + "</option>";
+                }
+                $("#rid").append(ridSelect);
+            },
+            error: function () {
+                alert('系统错误:请联系管理员！');
+            }
+        });
+
+        /**
+         * 加载部门下拉框
+         */
+        $.ajax({
+            url: "/Emp/getDeps",
+            type: "post",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (result) {
+                var didSelect = "<option value=''>------请选择------</option>";
+                for (var i = 0; i < result.length; i++) {
+                    didSelect += "<option value='" + result[i].Did + "'>" + result[i].Dname + "</option>";
+                }
+                $("#did").append(didSelect);
+            },
+            error: function () {
+                alert('系统错误:请联系管理员！');
+            }
+        });
+
+    });
+
+    
+
+</script>
+<blockquote class="layui-elem-quote">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">员工账号：</label>
+            <div class="layui-inline">
+                <input type="text" lay-verify="required" id="eid" name="eid" class="layui-input" />
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">密码：</label>
+            <div class="layui-inline">
+                <input type="password" lay-verify="required" id="password" name="password" class="layui-input"/>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">员工姓名：</label>
+            <div class="layui-inline">
+                <input type="text" id="ename" name="ename" lay-verify="required" class="layui-input" />
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">年龄：</label>
+            <div class="layui-inline">
+                <input type="text" id="age" name="age" class="layui-input" lay-verify="required|number" onkeyup="this.value=this.value.replace(/\D|^0/g,'')" onafterpaste="this.value=this.value.replace(/\D|^0/g,'')" />
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">部门：</label>
+            <div class="layui-input-inline">
+                <select class="layui-select" id="did" name="did" lay-verify="required" style="width:156px;"></select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">岗位：</label>
+            <div class="layui-input-inline">
+                <select class="layui-select" id="rid" name="rid" lay-verify="required" style="width:156px;"></select>
+            </div>
+        </div>
+
+    </div>
+
+        <div id="Tip" style="color:red; font-size:18px; font-weight:500;display:none;" >
+           
+        </div>
+
+</blockquote>

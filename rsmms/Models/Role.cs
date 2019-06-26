@@ -7,7 +7,7 @@ namespace rsmms.Models
 {
     public class Role
     {
-        private int rid;
+        private int? rid;
         private String rname;
         private String rdesc;
 
@@ -16,14 +16,14 @@ namespace rsmms.Models
 
         }
 
-        public Role(int rid, string rname, string rdesc)
+        public Role(int? rid, string rname, string rdesc)
         {
             this.rid = rid;
             this.rname = rname;
             this.rdesc = rdesc;
         }
 
-        public int Rid { get => rid; set => rid = value; }
+        public int? Rid { get => rid; set => rid = value; }
         public string Rname { get => rname; set => rname = value; }
         public string Rdesc { get => rdesc; set => rdesc = value; }
     }

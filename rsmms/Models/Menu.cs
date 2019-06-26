@@ -7,7 +7,7 @@ namespace rsmms.Models
 {
     public class Menu
     {
-        private int mid;
+        private int? mid;
         private String mname;
         private String href;
         private int level;
@@ -21,7 +21,7 @@ namespace rsmms.Models
 
         }
 
-        public Menu(int mid, string mname, string href, int level, string remark, int parent_mid)
+        public Menu(int? mid, string mname, string href, int level, string remark, int parent_mid)
         {
             this.mid = mid;
             this.mname = mname;
@@ -31,7 +31,7 @@ namespace rsmms.Models
             this.parent_mid = parent_mid;
         }
 
-        public int Mid { get => mid; set => mid = value; }
+        public int? Mid { get => mid; set => mid = value; }
         public string Mname { get => mname; set => mname = value; }
         public string Href { get => href; set => href = value; }
         public int Level { get => level; set => level = value; }

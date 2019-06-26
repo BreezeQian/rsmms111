@@ -12,6 +12,9 @@ namespace rsmms.Utils
         private static String connectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;" +
         "AttachDbFilename='|DataDirectory|\\rgmms.mdf';";
 
+        /**
+         *  查询
+         */ 
         public static SqlDataReader ExecuteReader(string strSQL)
         {
         
@@ -28,6 +31,25 @@ namespace rsmms.Utils
                  throw e;
              }   
  
+        }
+
+        /**
+         * 增、删、改
+         */ 
+        public static int ExecuteNonQuery(string strSQL)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand cmd = new SqlCommand(strSQL, connection);
+            try
+            {
+                connection.Open();
+                int result = cmd.ExecuteNonQuery();
+                return result;
+            }
+            catch (System.Data.SqlClient.SqlException e)
+            {
+                throw e;
+            }
         }
     }
 }

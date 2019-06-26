@@ -17,7 +17,8 @@ namespace rsmms.Service
         {
             
             List<Dep> depList = new List<Dep>();
-            String sql = "select d.*  from Dep d ";
+            String sql = "select d.*  from Dep d where 1=1 ";
+            
             SqlDataReader dr = DBUtil.ExecuteReader(sql);
             while (dr.Read())
             {

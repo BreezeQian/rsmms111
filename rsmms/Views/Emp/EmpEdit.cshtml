@@ -1,0 +1,77 @@
+﻿<script type="text/javascript" src="~/Scripts/layui/layui.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
+<script>
+    $(function () {
+        /**
+         * 加载角色下拉框
+         */
+        $.ajax({
+            url: "/Emp/getRoles",
+            type: "post",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (result) {
+                var ridSelect = "<option value=''>------请选择------</option>";
+                for (var i = 0; i < result.length; i++) {
+                    ridSelect += "<option value='" + result[i].Rid + "'>" + result[i].Rname + "</option>";
+                }
+                $("#rid").append(ridSelect);
+            },
+            error: function () {
+                alert('系统错误:请联系管理员！');
+            }
+        });
+
+        /**
+         * 加载部门下拉框
+         */
+        $.ajax({
+            url: "/Emp/getDeps",
+            type: "post",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (result) {
+                var didSelect = "<option value=''>------请选择------</option>";
+                for (var i = 0; i < result.length; i++) {
+                    didSelect += "<option value='" + result[i].Did + "'>" + result[i].Dname + "</option>";
+                }
+                $("#did").append(didSelect);
+            },
+            error: function () {
+                alert('系统错误:请联系管理员！');
+            }
+        });
+
+        /**
+         *  设置下拉框默认选中已有 
+         */
+        var did_hid = $("#did_hid").val();
+        var rid_hid = $("#rid_hid").val();
+        $("#did").val(did_hid);
+        $("#rid").val(rid_hid);
+
+    });
+
+</script>
+<div>
+    <div>
+        员工账号：<input type="text" readonly="readonly" id="eid" name="eid" class="layui-input" value="@ViewBag.Emp.Eid" />
+    </div>
+    <div>
+        员工姓名：<input type="text" id="ename" name="ename" class="layui-input" value="@ViewBag.Emp.Ename" />
+    </div>
+    <div>
+        年龄：<input type="text" id="age" name="age" class="layui-input" lay-verify="required|number" value="@ViewBag.Emp.Age" />
+    </div>
+    <div>
+        <input type="hidden" id="did_hid" value="@ViewBag.Emp.Dep.Did" />
+        部门：<select class="layui-select" id="did" name="did"></select>
+    </div>
+    <div>
+        <input type="hidden" id="rid_hid" value="@ViewBag.Emp.Role.Rid" />
+        岗位：<select class="layui-select" id="rid" name="rid"></select>
+    </div>
+</div>
