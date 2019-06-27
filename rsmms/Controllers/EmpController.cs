@@ -66,6 +66,49 @@ namespace rsmms.Controllers
             msg = empService.AddEmp(emp, rid);
             return Json(msg);
         }
+
+        /**
+         *  修改员工执行代码
+         */
+        public ActionResult doEmpUpdate(String eid, String ename, String age, String did, String rid)
+        {
+            String msg = "";
+            Emp emp = new Emp();
+            emp.Eid = eid;
+            emp.Ename = ename;
+            if (age != null && !age.Equals(""))
+            {
+                emp.Age = int.Parse(age);
+            }
+            else
+            {
+                emp.Age = 0;
+            }
+            if (did != null && !did.Equals(""))
+            {
+                emp.Did = int.Parse(did);
+            }
+            else
+            {
+                emp.Did = null;
+            }
+            EmpService empService = new EmpService();
+            msg = empService.UpdateEmp(emp, rid);
+            return Json(msg);
+        }
+
+        /**
+         *  删除员工执行代码
+         */
+        public ActionResult doEmpDelete(String eid)
+        {
+            String msg = "";
+            Emp emp = new Emp();
+            emp.Eid = eid;
+            EmpService empService = new EmpService();
+            msg = empService.DeleteEmp(emp);
+            return Json(msg);
+        }
         /**
          * 页面数据加载
          */

@@ -17,7 +17,7 @@ namespace rsmms.Service
         {
             List<Emp> empList = new List<Emp>();
             String sql = "select e.*, d.dname, d.ddesc, x.rid, x.rname, x.rdesc  from Emp e "
-                + "left join Dep d on e.did = e.did "
+                + "left join Dep d on e.did = d.did "
                 + "left join (select re.eid, r.* from Role r, relation_role_emp re where r.rid = re.rid) x on x.eid = e.eid where 1=1 ";
             if(empQuery.Eid != null && !(empQuery.Eid.Equals("")))
             {
@@ -102,7 +102,9 @@ namespace rsmms.Service
             }
             return emp;
         } 
-        
+        /**
+         * 新增员工
+         */ 
         public String AddEmp(Emp emp, String rid)
         {
             String msg = "";
@@ -139,6 +141,55 @@ namespace rsmms.Service
                 }
             }
 
+            return msg;
+        }
+
+        /**
+         * 修改员工
+         */
+        public String UpdateEmp(Emp emp, String rid)
+        {
+            String msg = "";
+            String sql = "update Emp set ename=N'"+emp.Ename+"',"
+                + "age=" + emp.Age + ", did=" + emp.Did +"  where eid = N'"+emp.Eid +"'";
+                int count = DBUtil.ExecuteNonQuery(sql);
+                if (count == 1)
+                {
+                    String sql2 = "delete relation_role_emp where eid = N'" + emp.Eid + "'";
+                   
+                    if (rid != null && !rid.Equals(""))
+                    {
+
+                        String sql1 = "insert into relation_role_emp  values"
+                                 + " (N'" + emp.Eid + "'," + int.Parse(rid) + ")";
+                        int count1 = DBUtil.ExecuteNonQuery(sql1);
+                        if (count1 == 1)
+                        {
+                            msg = "修改成功";
+                        }
+                    }
+                    else
+                    {
+                        msg = "修改成功";
+                    }
+                    
+                }
+            
+
+            return msg;
+        }
+
+        /**
+         * 删除员工（先删除与之关系的角色）
+         */
+        public String DeleteEmp(Emp emp)
+        {
+            String msg = "";
+            String sql = "delete relation_role_emp where eid = N'" + emp.Eid + "'";
+            DBUtil.ExecuteNonQuery(sql);
+            String sql1 = "delete Emp where eid = N'" + emp.Eid + "'";
+            DBUtil.ExecuteNonQuery(sql1);
+            msg = "删除成功";
             return msg;
         }
     }
