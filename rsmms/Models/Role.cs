@@ -11,6 +11,8 @@ namespace rsmms.Models
         private String rname;
         private String rdesc;
 
+        private List<Menu> menus;
+
         public Role()
         {
 
@@ -26,5 +28,6 @@ namespace rsmms.Models
         public int? Rid { get => rid; set => rid = value; }
         public string Rname { get => rname; set => rname = value; }
         public string Rdesc { get => rdesc; set => rdesc = value; }
+        public List<Menu> Menus { get => menus; set => menus = value; }
     }
 }

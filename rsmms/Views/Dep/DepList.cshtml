@@ -3,25 +3,225 @@
 }
 <h2>@ViewBag.Title</h2>
 
-<div>
-    <table id="tbList">
-        <tr>
-            <th>部门名称</th>
-            <th>部门描述</th>
-            <th>操作</th>
-        </tr>
-        <!--遍历 Action方法 设置给 ViewData 的集合数据，生成HTML代码-->
-        @foreach (var e in ViewBag.Data)
-        {
-            <tr>
-                <td>@e.Dname</td>
-                <td>@e.Ddesc</td>
-                <td>
-                    <a href="javascript:void(0)">编辑</a>&nbsp;&nbsp;
-                    <a href="javascript:void(0)">删除</a>
-                </td>
 
-            </tr>
-        }
-    </table>
+<script>
+
+    $(function () {
+        $.ajax({
+            url: "/Dep/getDepList",
+            type: "post",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (result) {
+                var html = "";
+                for (var i = 0; i < result.length; i++) {
+                    html += "<tr><td>" + result[i].Dname + "</td><td>" + result[i].Ddesc + "</td>";
+
+                    html += "<td><input type='button' onclick='updateDepById(\"" + result[i].Did + "\")' value='编辑' />&nbsp;&nbsp;<input type='button' onclick='deleteDepById(\"" + result[i].Did + "\")' value='删除' /></td>";
+                    html += "</tr>";
+                }
+                $("#mytbList").empty();
+                $("#mytbList").append(html);
+
+            },
+            error: function () {
+                alert('系统错误:请联系管理员！');
+            }
+        });
+        
+
+        /**
+         * 重置查询条件
+         */
+        $("#reset").click(function () {
+            $("#dname").val("");
+        });
+
+        //查询
+        $("#query").click(function () {
+            queryDepByCondition();
+        });
+
+        layui.use(['layer', 'form', 'table'], function () {
+            var layer = layui.layer,
+                $ = layui.jquery,
+                form = layui.form,
+                table = layui.table,
+                t;
+        });
+
+        //新增
+        $("#add").click(function () {
+            layer.open({
+                type: 2 //此处以iframe举例
+                , title: '新增员工'
+                , area: ['60%', '80%']
+                , shade: 0
+                , maxmin: true
+                , content: '/Dep/DepAdd'
+                , btn: ['保存', '关闭'] //只是为了演示
+                , yes: function (index, layero) {
+                    //获得新增页面的数据
+
+                    var dname = layer.getChildFrame('body', index).find("#dname").val();
+                    var ddesc = layer.getChildFrame('body', index).find("#ddesc").val();
+                    $.ajax({
+                        url: '/Dep/doDepAdd?dname=' + dname + '&ddesc=' + ddesc,
+                        dataType: 'json',
+                        type: 'post',
+                        async: false,
+                        success: function (result) {
+                            layer.closeAll();
+                            queryDepByCondition();
+                            layer.msg(result, {
+                                time: 1500,
+                            });
+
+                        },
+                        error: function () {
+                            alert('系统提示：发生不知明错误，请联系管理员');
+                        }
+                    });
+                }
+
+                , btn2: function () {
+                    layer.closeAll();
+                }
+
+                , zIndex: layer.zIndex //重点1
+                , success: function (layero) {
+                    layer.setTop(layero); //重点2
+                }
+            });
+        });
+
+    });
+
+
+    function queryDepByCondition() {
+      
+        var dname = $("#dname").val();
+       
+
+        $.ajax({
+            url: "/Dep/getDepList?dname=" + dname ,
+            type: "post",
+
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (result) {
+                var html = "";
+                for (var i = 0; i < result.length; i++) {
+                    html += "<tr><td>" + result[i].Dname + "</td><td>" + result[i].Ddesc + "</td>";
+
+                    html += "<td><input type='button' onclick='updateDepById(\"" + result[i].Did + "\")' value='编辑' />&nbsp;&nbsp;<input type='button' onclick='deleteDepById(\"" + result[i].Did + "\")' value='删除' /></td>";
+                    html += "</tr>";
+                }
+                $("#mytbList").empty();
+                $("#mytbList").append(html);
+
+            },
+            error: function () {
+                alert('系统错误:请联系管理员！');
+            }
+        });
+    }
+
+    //删除
+    function deleteDepById(did) {
+        
+        $.ajax({
+            url: '/Dep/doDepDelete?did=' + did,
+            dataType: 'json',
+            type: 'post',
+            async: false,
+            success: function (result) {
+                queryDepByCondition();
+                layer.msg(result, {
+                    time: 1500,
+                });
+
+            },
+            error: function () {
+                alert('系统提示：发生不知明错误，请联系管理员');
+            }
+        });
+    }
+    //编辑
+    function updateDepById(did) {
+        layer.open({
+            type: 2 //此处以iframe举例
+            , title: '编辑部门'
+            , area: ['60%', '80%']
+            , shade: 0
+            , maxmin: true
+            , content: '/Dep/DepEdit?did=' + did
+            , btn: ['保存', '关闭'] //只是为了演示
+            , yes: function (index, layero) {
+                //获得修改页面的数据
+                var did = layer.getChildFrame('body', index).find("#did").val();
+                var dname = layer.getChildFrame('body', index).find("#dname").val();
+                var ddesc = layer.getChildFrame('body', index).find("#ddesc").val();
+                $.ajax({
+                    url: '/Dep/doDepUpdate?did=' + did + '&dname=' + dname + '&ddesc=' + ddesc,
+                    dataType: 'json',
+                    type: 'post',
+                    async: false,
+                    success: function (result) {
+                        layer.closeAll();
+                        queryDepByCondition();
+                        layer.msg(result, {
+                            time: 1500,
+                        });
+
+                    },
+                    error: function () {
+                        alert('系统提示：发生不知明错误，请联系管理员');
+                    }
+                });
+            }
+            , btn2: function () {
+                layer.closeAll();
+            }
+
+            , zIndex: layer.zIndex //重点1
+            , success: function (layero) {
+                layer.setTop(layero); //重点2
+            }
+        });
+    }
+
+
+</script>
+<form id="queryDepFrom">
+    <div>
+
+
+        <font size="4">
+            部门名称：
+            </font><input type="text" id="dname" name="dname" />&nbsp;&nbsp;
+            <div style="float:right;">
+                <input type="button" value="新增" class="btn-danger" id="add" />&nbsp;&nbsp;
+                <input type="button" value="查询" class="btn-primary" id="query" />&nbsp;&nbsp;
+                <input type="button" value="重置" class="btn-default" id="reset" />
+            </div>
+
 </div>
+
+    <div style="position: fixed;top:180px; left: 16%; right: auto;  bottom: auto; ">
+        <table id="tbList" border="2" width="500" height="130" cellspacing="0">
+            <thead>
+                <tr style="font-size:25px" align="center">
+                    <th style="text-align:center">部门名称</th>
+                    <th style="text-align:center">部门描述</th>
+                    <th style="text-align:center">操作</th>
+                </tr>
+            </thead>
+            <tbody id="mytbList" style="font-size:17px" align="center"></tbody>
+
+
+        </table>
+    </div>
+</form>

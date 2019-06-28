@@ -126,6 +126,8 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MenuController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\DepController.cs" />
@@ -158,9 +160,13 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="icon\bg_login.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\jqprint\jquery-1.11.3.min.js" />
+    <Content Include="Scripts\jqprint\jquery-migrate-1.2.1.js" />
+    <Content Include="Scripts\jqprint\jquery.jqprint-0.3.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -288,7 +294,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Emp\EmpList.cshtml" />
-    <Content Include="Views\Dep\DepList.cshtml" />
     <Content Include="Views\Role\RoleList.cshtml" />
     <Content Include="Views\Menu\MenuList.cshtml" />
     <Content Include="Scripts\layui\font\iconfont.eot" />
@@ -296,6 +301,14 @@
     <Content Include="Scripts\layui\font\iconfont.woff" />
     <Content Include="Views\Emp\EmpEdit.cshtml" />
     <Content Include="Views\Emp\EmpAdd.cshtml" />
+    <Content Include="Views\Login\ToLogin.cshtml" />
+    <Content Include="Views\Emp\ToUpdatePassword.cshtml" />
+    <Content Include="Views\Dep\DepAdd.cshtml" />
+    <Content Include="Views\Dep\DepEdit.cshtml" />
+    <Content Include="Views\Dep\DepList.cshtml" />
+    <Content Include="Views\Role\RoleAdd.cshtml" />
+    <Content Include="Views\Role\RoleEdit.cshtml" />
+    <Content Include="Views\Role\RoleResource.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />

@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace rsmms.Controllers
 {
-    public class EmpController : Controller
+    public class EmpController : BaseController
     {
         
         /**
@@ -20,8 +20,15 @@ namespace rsmms.Controllers
         }
 
         /**
-         * 编辑员工（数据回显）
+         * 跳转修改密码页面
          */ 
+        public ActionResult ToUpdatePassword()
+        {
+            return View();
+        }
+        /**
+         * 编辑员工（数据回显）
+         */
         public ActionResult EmpEdit(String eid)
         {
             EmpService empService = new EmpService();
@@ -136,8 +143,9 @@ namespace rsmms.Controllers
          */
         public JsonResult getRoles()
         {
+            Role role = new Role();
             RoleService roleService = new RoleService();
-            List<Role> roleList = roleService.SelectRoles();
+            List<Role> roleList = roleService.SelectRoles(role);
             return Json(roleList);
         }
 
@@ -146,9 +154,25 @@ namespace rsmms.Controllers
         */
         public JsonResult getDeps()
         {
+            Dep dep = new Dep();
             DepService depService = new DepService();
-            List<Dep> depList = depService.SelectDeps();
+            List<Dep> depList = depService.SelectDeps(dep);
             return Json(depList);
+        }
+
+        public ActionResult doUpdateEmpPassword(String password, String newPassword)
+        {
+            String msg = "";
+            String eid = this.Session["eid"] as String;
+            EmpService empService = new EmpService();
+            msg = empService.UpdateEmpPassword(eid, password, newPassword);
+            if (msg.Equals("success"))
+            {
+                Emp emp = this.Session["myEmp"] as Emp;
+                emp.Password = newPassword;
+                this.Session["myEmp"] = emp;
+            }
+            return Json(msg);
         }
 
     }

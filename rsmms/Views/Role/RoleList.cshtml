@@ -3,25 +3,269 @@
 }
 <h2>@ViewBag.Title</h2>
 
-<div>
-    <table id="tbList">
-        <tr>
-            <th>角色名称</th>
-            <th>角色描述</th>
-            <th>操作</th>
-        </tr>
-        <!--遍历 Action方法 设置给 ViewData 的集合数据，生成HTML代码-->
-        @foreach (var e in ViewBag.Data)
-        {
-            <tr>
-                <td>@e.Rname</td>
-                <td>@e.Rdesc</td>
-                <td>
-                    <a href="javascript:void(0)">编辑</a>&nbsp;&nbsp;
-                    <a href="javascript:void(0)">删除</a>
-                </td>
 
-            </tr>
-        }
-    </table>
-</div>
+<script>
+
+    $(function () {
+        $.ajax({
+            url: "/Role/getRoleList",
+            type: "post",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (result) {
+                var html = "";
+                for (var i = 0; i < result.length; i++) {
+                    html += "<tr><td>" + result[i].Rname + "</td><td>" + result[i].Rdesc + "</td>";
+
+                    html += "<td><input type='button' onclick='updateRoleById(\"" + result[i].Rid + "\")' value='编辑' />&nbsp;&nbsp;<input type='button' onclick='deleteRoleById(\"" + result[i].Rid + "\")' value='删除' /></td>";
+                    html += "</tr>";
+                }
+                $("#mytbList").empty();
+                $("#mytbList").append(html);
+
+            },
+            error: function () {
+                alert('系统错误:请联系管理员！');
+            }
+        });
+
+
+        /**
+         * 重置查询条件
+         */
+        $("#reset").click(function () {
+            $("#rname").val("");
+        });
+
+        //查询
+        $("#query").click(function () {
+            queryRoleByCondition();
+        });
+
+        layui.use(['layer', 'form', 'table'], function () {
+            var layer = layui.layer,
+                $ = layui.jquery,
+                form = layui.form,
+                table = layui.table,
+                t;
+        });
+
+        //新增
+        $("#add").click(function () {
+            layer.open({
+                type: 2 //此处以iframe举例
+                , title: '新增角色'
+                , area: ['60%', '80%']
+                , shade: 0
+                , maxmin: true
+                , content: '/Role/RoleAdd'
+                , btn: ['保存', '关闭'] //只是为了演示
+                , yes: function (index, layero) {
+                    //获得新增页面的数据
+
+                    var rname = layer.getChildFrame('body', index).find("#rname").val();
+                    var rdesc = layer.getChildFrame('body', index).find("#rdesc").val();
+                    $.ajax({
+                        url: '/Role/doRoleAdd?rname=' + rname + '&rdesc=' + rdesc,
+                        dataType: 'json',
+                        type: 'post',
+                        async: false,
+                        success: function (result) {
+                            layer.closeAll();
+                            queryRoleByCondition();
+                            layer.msg(result, {
+                                time: 1500,
+                            });
+
+                        },
+                        error: function () {
+                            alert('系统提示：发生不知明错误，请联系管理员');
+                        }
+                    });
+                }
+
+                , btn2: function () {
+                    layer.closeAll();
+                }
+
+                , zIndex: layer.zIndex //重点1
+                , success: function (layero) {
+                    layer.setTop(layero); //重点2
+                }
+            });
+        });
+        
+
+    });
+
+
+    function queryRoleByCondition() {
+
+        var rname = $("#rname").val();
+        $.ajax({
+            url: "/Role/getRoleList?rname="+rname,
+            type: "post",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            success: function (result) {
+                var html = "";
+                for (var i = 0; i < result.length; i++) {
+                    html += "<tr><td>" + result[i].Rname + "</td><td>" + result[i].Rdesc + "</td>";
+
+                    html += "<td><input type='button' value='授权' class='btn-warning' onclick='resourceRoleById(\"" + result[i].Rid + "\")' />&nbsp;&nbsp;<input type='button' onclick='updateRoleById(\"" + result[i].Rid + "\")' value='编辑' />&nbsp;&nbsp;<input type='button' onclick='deleteRoleById(\"" + result[i].Rid + "\")' value='删除' /></td>";
+                    html += "</tr>";
+                }
+                $("#mytbList").empty();
+                $("#mytbList").append(html);
+
+            },
+            error: function () {
+                alert('系统错误:请联系管理员！');
+            }
+        });
+    }
+
+    //编辑
+    function updateRoleById(rid) {
+        layer.open({
+            type: 2 //此处以iframe举例
+            , title: '编辑角色'
+            , area: ['60%', '80%']
+            , shade: 0
+            , maxmin: true
+            , content: '/Role/RoleEdit?rid=' + rid
+            , btn: ['保存', '关闭'] //只是为了演示
+            , yes: function (index, layero) {
+                //获得修改页面的数据
+                var rid = layer.getChildFrame('body', index).find("#rid").val();
+                var rname = layer.getChildFrame('body', index).find("#rname").val();
+                var rdesc = layer.getChildFrame('body', index).find("#rdesc").val();
+                $.ajax({
+                    url: '/Role/doRoleUpdate?rid=' + rid + '&rname=' + rname + '&rdesc=' + rdesc,
+                    dataType: 'json',
+                    type: 'post',
+                    async: false,
+                    success: function (result) {
+                        layer.closeAll();
+                        queryRoleByCondition();
+                        layer.msg(result, {
+                            time: 1500,
+                        });
+
+                    },
+                    error: function () {
+                        alert('系统提示：发生不知明错误，请联系管理员');
+                    }
+                });
+            }
+            , btn2: function () {
+                layer.closeAll();
+            }
+
+            , zIndex: layer.zIndex //重点1
+            , success: function (layero) {
+                layer.setTop(layero); //重点2
+            }
+        });
+    }
+
+    //删除
+    function deleteRoleById(rid) {
+
+        $.ajax({
+            url: '/Role/doRoleDelete?rid=' + rid,
+            dataType: 'json',
+            type: 'post',
+            async: false,
+            success: function (result) {
+                queryRoleByCondition();
+                layer.msg(result, {
+                    time: 1500,
+                });
+
+            },
+            error: function () {
+                alert('系统提示：发生不知明错误，请联系管理员');
+            }
+        });
+    }
+
+    /**
+     * 授权
+     */ 
+    function resourceRoleById(rid) {
+        layer.open({
+            type: 2 //此处以iframe举例
+            , title: '编辑角色'
+            , area: ['60%', '80%']
+            , shade: 0
+            , maxmin: true
+            , content: '/Role/RoleResource?rid=' + rid
+            , btn: ['保存', '关闭'] //只是为了演示
+            , yes: function (index, layero) {
+                //获得授权页面的数据
+                //var rid = layer.getChildFrame('body', index).find("#rid").val();
+                //var rname = layer.getChildFrame('body', index).find("#rname").val();
+                //var rdesc = layer.getChildFrame('body', index).find("#rdesc").val();
+                //$.ajax({
+                //    url: '/Role/doRoleUpdate?rid=' + rid + '&rname=' + rname + '&rdesc=' + rdesc,
+                //    dataType: 'json',
+                //    type: 'post',
+                //    async: false,
+                //    success: function (result) {
+                //        layer.closeAll();
+                //        queryRoleByCondition();
+                //        layer.msg(result, {
+                //            time: 1500,
+                //        });
+
+                //    },
+                //    error: function () {
+                //        alert('系统提示：发生不知明错误，请联系管理员');
+                //    }
+                //});
+            }
+            , btn2: function () {
+                layer.closeAll();
+            }
+
+            , zIndex: layer.zIndex //重点1
+            , success: function (layero) {
+                layer.setTop(layero); //重点2
+            }
+        });
+    }
+</script>
+<form id="queryDepFrom">
+    <div>
+
+
+        <font size="4">
+            角色名称：
+        </font><input type="text" id="rname" name="rname" />&nbsp;&nbsp;
+        <div style="float:right;">
+            <input type="button" value="新增" class="btn-danger" id="add" />&nbsp;&nbsp;
+            <input type="button" value="查询" class="btn-primary" id="query" />&nbsp;&nbsp;
+            <input type="button" value="重置" class="btn-default" id="reset" />
+        </div>
+
+    </div>
+
+    <div style="position: fixed;top:180px; left: 16%; right: auto;  bottom: auto; ">
+        <table id="tbList" border="2" width="500" height="130" cellspacing="0">
+            <thead>
+                <tr style="font-size:25px" align="center">
+                    <th style="text-align:center">角色名称</th>
+                    <th style="text-align:center">角色描述</th>
+                    <th style="text-align:center">操作</th>
+                </tr>
+            </thead>
+            <tbody id="mytbList" style="font-size:17px" align="center"></tbody>
+
+
+        </table>
+    </div>
+</form>
+

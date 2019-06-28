@@ -1,4 +1,5 @@
-﻿<script type="text/javascript" src="~/Scripts/layui/layui.js"></script>
+﻿<link rel="stylesheet" href="~/Scripts/layui/css/layui.css" />
+<script type="text/javascript" src="~/Scripts/layui/layui.js"></script>
 <script type="text/javascript" src="~/Scripts/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="~/Scripts/bootstrap.min.js"></script>
 <script>
@@ -56,22 +57,45 @@
     });
 
 </script>
-<div>
-    <div>
-        员工账号：<input type="text" readonly="readonly" id="eid" name="eid" class="layui-input" value="@ViewBag.Emp.Eid" />
+<blockquote class="layui-elem-quote">
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">员工账号：</label>
+            <div class="layui-inline">
+                <input type="text" readonly="readonly" id="eid" name="eid" class="layui-input" value="@ViewBag.Emp.Eid" />
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">员工姓名：</label>
+            <div class="layui-inline">
+                <input type="text" id="ename" name="ename" class="layui-input" value="@ViewBag.Emp.Ename" />
+            </div>
+        </div>
+        <br />
+
+        <div class="layui-inline">
+            <label class="layui-form-label">年&nbsp;&nbsp;&nbsp;龄：&nbsp;&nbsp;&nbsp;</label>
+            <div class="layui-inline">
+                <input type="text" id="age" name="age" class="layui-input" lay-verify="required|number" value="@ViewBag.Emp.Age" />
+            </div>
+        </div>
+
+        <div class="layui-inline">
+            <label class="layui-form-label">部&nbsp;&nbsp;&nbsp;门：&nbsp;&nbsp;&nbsp;</label>
+            <div class="layui-inline">
+                <input type="hidden" id="did_hid" value="@ViewBag.Emp.Dep.Did" />
+                <select class="layui-select" id="did" name="did" style="width:156px;"></select>
+            </div>
+        </div>
+            <br />
+        <div class="layui-inline">
+            <label class="layui-form-label">岗&nbsp;&nbsp;&nbsp;位：&nbsp;&nbsp;&nbsp;</label>
+            <div class="layui-inline">
+                <input type="hidden" id="rid_hid" value="@ViewBag.Emp.Role.Rid" />
+                <select class="layui-select" id="rid" name="rid" style="width:156px;"></select>
+            </div>
+        </div>
     </div>
-    <div>
-        员工姓名：<input type="text" id="ename" name="ename" class="layui-input" value="@ViewBag.Emp.Ename" />
-    </div>
-    <div>
-        年龄：<input type="text" id="age" name="age" class="layui-input" lay-verify="required|number" value="@ViewBag.Emp.Age" />
-    </div>
-    <div>
-        <input type="hidden" id="did_hid" value="@ViewBag.Emp.Dep.Did" />
-        部门：<select class="layui-select" id="did" name="did"></select>
-    </div>
-    <div>
-        <input type="hidden" id="rid_hid" value="@ViewBag.Emp.Role.Rid" />
-        岗位：<select class="layui-select" id="rid" name="rid"></select>
-    </div>
-</div>
+
+</blockquote>

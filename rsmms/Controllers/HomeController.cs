@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace rsmms.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public ActionResult Index()
         {
@@ -28,11 +28,13 @@ namespace rsmms.Controllers
             return View();
         }
 
-        public ActionResult EmpList()
-        {
-            ViewBag.Message = "emp...";
-
-            return View();
+        public ActionResult ExitSystem()
+        {         
+            Session["myEmp"] = null;
+            return new RedirectResult("/Login/ToLogin");
         }
+
+
+
     }
 }

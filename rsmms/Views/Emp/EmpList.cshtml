@@ -2,7 +2,9 @@
     ViewBag.Title = "员工管理";
 }
 <h2>@ViewBag.Title</h2>
-
+<script type="text/javascript" src="~/Scripts/jqprint/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="~/Scripts/jqprint/jquery-migrate-1.2.1.js"></script>
+<script type="text/javascript" src="~/Scripts/jqprint/jquery.jqprint-0.3.js"></script>
 <script>
 
     $(function () {
@@ -12,7 +14,7 @@
             dataType: "json",
             contentType: "application/json; charset=utf-8",
             async: false,
-            success: function (result) { 
+            success: function (result) {
                 var html = "";
                 for (var i = 0; i < result.length; i++) {
                     html += "<tr><td>" + result[i].Eid + "</td><td>" + result[i].Ename + "</td><td>" + result[i].Age +
@@ -97,7 +99,7 @@
                 $ = layui.jquery,
                 form = layui.form,
                 table = layui.table,
-                t; 
+                t;
         });
 
 
@@ -128,9 +130,9 @@
                                 layer.closeAll();
                                 queryEmpByCondition();
                                 layer.msg(result, {
-                                      time: 1500, 
+                                    time: 1500,
                                 });
-                                
+
                             },
                             error: function () {
                                 alert('系统提示：发生不知明错误，请联系管理员');
@@ -139,7 +141,7 @@
                     } else {
                         alert('系统提示：请输入员工用户名和密码');
                     }
-                    
+
                 }
                 , btn2: function () {
                     layer.closeAll();
@@ -152,6 +154,18 @@
             });
         });
 
+        
+        /**
+         * 打印
+         */
+        $("#print").click(function () {
+            $("#printDiv").jqprint({
+                debug: false,
+                importCSS: true,
+                printContainer: true,
+                operaSupport: false
+            });
+        });
     });
 
     function updateEmpById(eid) {
@@ -197,7 +211,7 @@
                 layer.setTop(layero); //重点2
             }
         });
-        
+
     }
 
     function deleteEmpById(eid) {
@@ -254,10 +268,10 @@
             }
         });
     }
-   
-   
 
-    
+
+
+
 </script>
 <form id="queryEmpFrom">
     <div>
@@ -265,8 +279,9 @@
         <font size="4">员工账号：</font><input type="text" id="eid" name="eid" />&nbsp;&nbsp;
         <font size="4">员工姓名：</font><input type="text" id="ename" name="ename" />&nbsp;&nbsp;
         <font size="4">员工职位：</font><select id="rid" name="rid" style="width:170px;"></select>&nbsp;&nbsp;
-        <font size="4">所属部门：</font><select id="did" name="did" style="width:170px;"></select><br />
+        <font size="4">所属部门：</font><select id="did" name="did" style="width:170px;"></select><br /><br />
         <div style="float:right;">
+            <input type="button" value="打印" class="btn-warning" id="print" />&nbsp;&nbsp;
             <input type="button" value="新增" class="btn-danger" id="add" />&nbsp;&nbsp;
             <input type="button" value="查询" class="btn-primary" id="query" />&nbsp;&nbsp;
             <input type="button" value="重置" class="btn-default" id="reset" />
@@ -275,7 +290,7 @@
 
     </div>
 
-    <div style="position: fixed;top:180px; left: auto; right: auto;  bottom: auto; ">
+    <div id="printDiv" style="position: fixed;top:180px; left: 15%; right: auto;  bottom: auto; ">
         <table id="tbList" border="2" width="800" height="180" cellspacing="0">
             <thead>
                 <tr style="font-size:25px" align="center">
@@ -288,29 +303,7 @@
                 </tr>
             </thead>
             <tbody id="mytbList" style="font-size:17px" align="center"></tbody>
-            <!--遍历 Action方法 设置给 ViewData 的集合数据，生成HTML代码-->
-            @*@foreach (var e in ViewBag.Data)
-            {
-                <tr>
-                    <td>@e.Eid</td>
-                    <td>@e.Ename</td>
-                    <td>@e.Age</td>
-                    <td>@e.Dep.Dname</td>
-                    @if (@e.Role.Rname != "" && @e.Role.Rname != null)
-                    {
-                        <td>@e.Role.Rname</td>
-                    }
-                    else
-                    {
-                        <td>无</td>
-                    }
-                    <td>
-                        <a href="javascript:void(0)">编辑</a>&nbsp;&nbsp;
-                        <a href="javascript:void(0)">删除</a>
-                    </td>
-
-                </tr>
-            }*@
+            
         </table>
     </div>
 </form>

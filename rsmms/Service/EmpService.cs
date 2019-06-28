@@ -156,8 +156,8 @@ namespace rsmms.Service
                 if (count == 1)
                 {
                     String sql2 = "delete relation_role_emp where eid = N'" + emp.Eid + "'";
-                   
-                    if (rid != null && !rid.Equals(""))
+                    DBUtil.ExecuteNonQuery(sql2);
+                if (rid != null && !rid.Equals(""))
                     {
 
                         String sql1 = "insert into relation_role_emp  values"
@@ -190,6 +190,60 @@ namespace rsmms.Service
             String sql1 = "delete Emp where eid = N'" + emp.Eid + "'";
             DBUtil.ExecuteNonQuery(sql1);
             msg = "删除成功";
+            return msg;
+        }
+
+        /**
+         * 根据eid和password来查询（登录用）
+         */ 
+        public Emp SelectEmpByEidAndPassword(String eid, String password)
+        {
+            Emp emp = new Emp();
+            String sql = "select e.* from Emp e where e.eid=N'" + eid + "'" + " and e.password=N'" + password + "'";
+            SqlDataReader dr = DBUtil.ExecuteReader(sql);
+            if (dr.HasRows)
+            {
+                while (dr.Read())
+                {
+                    emp.Eid = dr["Eid"].ToString();
+                    emp.Ename = dr["Ename"].ToString();
+                    if (dr["Age"].ToString() != null && !dr["Age"].ToString().Equals(""))
+                    {
+                        emp.Age = int.Parse(dr["Age"].ToString());
+                    }  
+                    emp.Password = dr["Password"].ToString();
+                    if (dr["Did"].ToString() != null && !dr["Did"].ToString().Equals(""))
+                    {
+                        emp.Did = int.Parse(dr["Did"].ToString());
+                    }
+                }
+            }
+            return emp;
+        }
+
+
+        /**
+         * 修改密码（先根据eid和password查询有无数据，有说明旧密码正确，再修改新密码）
+         */ 
+        public String UpdateEmpPassword(String eid, String password, String newPassword)
+        {
+            String msg = "";
+            String sql = "select e.* from Emp e where e.eid=N'" + eid + "'" + " and e.password=N'" + password + "'";
+            SqlDataReader dr = DBUtil.ExecuteReader(sql);
+            if (dr.HasRows)
+            {
+                String sql1 = "update Emp set password = N'"+ newPassword + "' where eid = N'"+ eid +"'";
+                int count = DBUtil.ExecuteNonQuery(sql1);
+                if(count == 1)
+                {
+                    msg = "success";
+                }
+            }
+            else
+            {
+                msg = "原密码输入错误！";
+            }
+
             return msg;
         }
     }

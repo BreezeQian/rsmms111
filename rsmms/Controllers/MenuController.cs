@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace rsmms.Controllers
 {
-    public class MenuController : Controller
+    public class MenuController : BaseController
     {
         
 
